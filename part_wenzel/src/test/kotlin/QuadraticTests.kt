@@ -73,8 +73,7 @@ class QuadraticTests {
         @Test
         fun `Parameter with long mantissa`() {
             val result = QuadraticSolver.solve(1.555555555, 4.5555555555555, 1.555555555555)
-            TODO("Impl test with real results")
-            //assertThat(actual = result, criteria = equalTo(listOf(-2 + sqrt(3.0), -2 - sqrt(3.0))))
+            assertThat(actual = result, criteria = equalTo(listOf(-2.5339270808492, -0.39464434772325)))
         }
 
     }
