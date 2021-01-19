@@ -18,8 +18,9 @@ public class LoginWorker implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution delegateExecution) throws Exception {
+        System.out.println("Executing...");
         ExternalTaskClient client = ExternalTaskClient.create()
-                .baseUrl("http://localhost:8080/engine-rest")
+                .baseUrl("http://localhost:8080")
                 .asyncResponseTimeout(1000)
                 .build();
 
@@ -32,13 +33,17 @@ public class LoginWorker implements JavaDelegate {
                     String username = (String) externalTask.getVariable("username");
                     String enteredPassword = (String) externalTask.getVariable("password");
 
-                    LOGGER.info("Attempting login for user " + username + "....");
+                    System.out.println("Attempting login for user " + username + "....");
 
                     String correctPassword = userData.get(username);
                     if(correctPassword != null) {
                         if(correctPassword.equals(enteredPassword)) correct = true;
                     }
-                    LOGGER.info("Login info correct: " + correct);
+                    System.out.println("Login info correct: " + correct);
                 });
+    }
+
+    public static void main(String[] args) throws Exception {
+        new LoginWorker().execute(null);
     }
 }
