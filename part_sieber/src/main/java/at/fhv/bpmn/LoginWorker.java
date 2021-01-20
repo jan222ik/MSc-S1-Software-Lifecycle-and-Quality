@@ -1,6 +1,7 @@
 package at.fhv.bpmn;
 
-import org.camunda.bpm.client.ExternalTaskClient;
+
+import org.assertj.core.util.VisibleForTesting;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 
@@ -8,7 +9,7 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 
 public class LoginWorker implements JavaDelegate {
-    private final static Logger LOGGER =Logger.getLogger(LoginWorker.class.getName());
+    private final static Logger LOGGER = Logger.getLogger(LoginWorker.class.getName());
     private final static HashMap<String, String> userData = new HashMap<String, String>() {{
         put("admin", "admin");
         put("test", "abc");
@@ -17,47 +18,22 @@ public class LoginWorker implements JavaDelegate {
     }};
 
     @Override
-    public void execute(DelegateExecution delegateExecution) {
-        boolean correct = false;
+    public void execute(final DelegateExecution delegateExecution) {
         System.out.println("Executing...");
-        String username = (String) delegateExecution.getVariable("username");
-        String enteredPassword = (String) delegateExecution.getVariable("password");
+        final String username = (String) delegateExecution.getVariable("username");
+        final String enteredPassword = (String) delegateExecution.getVariable("password");
 
         System.out.println("Attempting login for user " + username + "....");
+        final boolean correct = checkPassword(username, enteredPassword);
 
-        String correctPassword = userData.get(username);
-        if(correctPassword != null) {
-            if(correctPassword.equals(enteredPassword)) correct = true;
-        }
         System.out.println("Login info correct: " + correct);
         delegateExecution.setVariable("correct", correct);
     }
 
-    public static void main(String[] args) throws Exception {
-        /*  System.out.println("Executing...");
-         ExternalTaskClient client = ExternalTaskClient.create()
-         .baseUrl("http://localhost:8080")
-         .asyncResponseTimeout(1000)
-         .build();
-
-         client.subscribe("check-login")
-         .lockDuration(1000)
-         .handler((externalTask, externalTaskService) -> {
-         boolean correct = false;
-         // put business logic
-
-         String username = (String) externalTask.getVariable("username");
-         String enteredPassword = (String) externalTask.getVariable("password");
-
-         System.out.println("Attempting login for user " + username + "....");
-
-         String correctPassword = userData.get(username);
-         if(correctPassword != null) {
-         if(correctPassword.equals(enteredPassword)) correct = true;
-         }
-         System.out.println("Login info correct: " + correct);
-         });
-         */
-        new LoginWorker().execute(null);
+    @SuppressWarnings("WeakerAccess")
+    @VisibleForTesting
+    protected boolean checkPassword(final String username, final String passwordPhrase) {
+        final String correctPassword = userData.get(username);
+        return correctPassword != null && correctPassword.equals(passwordPhrase);
     }
 }

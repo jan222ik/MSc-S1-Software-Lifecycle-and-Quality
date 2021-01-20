@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0xq6rvs" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.4.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0xq6rvs" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.5.0">
   <bpmn:collaboration id="Collaboration_1s3hpwx">
-    <bpmn:participant id="Participant_0xcx1dc" name="Login customer" processRef="Process_1s13na2" />
+    <bpmn:participant id="Participant_0xcx1dc" name="Login customer" processRef="process_lib" />
   </bpmn:collaboration>
-  <bpmn:process id="Process_1s13na2" isExecutable="true">
+  <bpmn:process id="process_lib" isExecutable="true">
     <bpmn:laneSet id="LaneSet_1hcmpcu" />
     <bpmn:startEvent id="Event_0wlrcml" name="Registered customer wants to borrow book">
       <bpmn:outgoing>Flow_1co9vbl</bpmn:outgoing>
@@ -46,25 +46,6 @@
       <bpmndi:BPMNShape id="Participant_0xcx1dc_di" bpmnElement="Participant_0xcx1dc" isHorizontal="true">
         <dc:Bounds x="160" y="86" width="1310" height="514" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Flow_0zk929s_di" bpmnElement="Flow_0zk929s">
-        <di:waypoint x="660" y="185" />
-        <di:waypoint x="845" y="185" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1yibagw_di" bpmnElement="Flow_1yibagw">
-        <di:waypoint x="420" y="185" />
-        <di:waypoint x="560" y="185" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0d1sij9_di" bpmnElement="Flow_0d1sij9">
-        <di:waypoint x="895" y="185" />
-        <di:waypoint x="1102" y="185" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="971" y="203" width="17" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1co9vbl_di" bpmnElement="Flow_1co9vbl">
-        <di:waypoint x="265" y="185" />
-        <di:waypoint x="320" y="185" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0w91rtg_di" bpmnElement="Flow_0w91rtg">
         <di:waypoint x="870" y="210" />
         <di:waypoint x="870" y="470" />
@@ -73,6 +54,25 @@
         <bpmndi:BPMNLabel>
           <dc:Bounds x="614" y="452" width="13" height="14" />
         </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1co9vbl_di" bpmnElement="Flow_1co9vbl">
+        <di:waypoint x="265" y="185" />
+        <di:waypoint x="320" y="185" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0d1sij9_di" bpmnElement="Flow_0d1sij9">
+        <di:waypoint x="895" y="185" />
+        <di:waypoint x="1102" y="185" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="971" y="203" width="17" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1yibagw_di" bpmnElement="Flow_1yibagw">
+        <di:waypoint x="420" y="185" />
+        <di:waypoint x="560" y="185" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0zk929s_di" bpmnElement="Flow_0zk929s">
+        <di:waypoint x="660" y="185" />
+        <di:waypoint x="845" y="185" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Event_0wlrcml_di" bpmnElement="Event_0wlrcml">
         <dc:Bounds x="229" y="167" width="36" height="36" />
