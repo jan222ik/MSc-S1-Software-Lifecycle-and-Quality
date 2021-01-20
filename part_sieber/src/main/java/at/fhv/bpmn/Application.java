@@ -30,7 +30,7 @@ public class Application {
         if (processEngine.getIdentityService().createUserQuery().list().isEmpty()) {
             processEngine.getRepositoryService()
                     .createDeployment()
-                    .addInputStream("login.bpmn", classLoader.getResourceAsStream("login.bpmn"))
+                    .addInputStream("src/main/quarantine/libraryV2.bpmn", classLoader.getResourceAsStream("src/main/quarantine/libraryV2.bpmn"))
                     .deploy();
         }
     }

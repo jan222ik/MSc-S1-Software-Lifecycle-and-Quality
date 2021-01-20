@@ -29,7 +29,7 @@
       <bpmn:incoming>Flow_1lzyugo</bpmn:incoming>
       <bpmn:outgoing>Flow_1kmjoil</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:serviceTask id="Activity_03q15dt" name="Check login data" camunda:type="external" camunda:topic="check-login">
+    <bpmn:serviceTask id="Activity_03q15dt" name="Check login data" camunda:class="at.fhv.bpmn.LoginWorker">
       <bpmn:incoming>Flow_1kmjoil</bpmn:incoming>
       <bpmn:outgoing>Flow_13lhzzc</bpmn:outgoing>
     </bpmn:serviceTask>

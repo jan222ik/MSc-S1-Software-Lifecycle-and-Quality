@@ -18,32 +18,46 @@ public class LoginWorker implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution delegateExecution) throws Exception {
+        boolean correct = false;
         System.out.println("Executing...");
-        ExternalTaskClient client = ExternalTaskClient.create()
-                .baseUrl("http://localhost:8080")
-                .asyncResponseTimeout(1000)
-                .build();
+        String username = (String) delegateExecution.getVariable("username");
+        String enteredPassword = (String) delegateExecution.getVariable("password");
 
-        client.subscribe("check-login")
-                .lockDuration(1000)
-                .handler((externalTask, externalTaskService) -> {
-                    boolean correct = false;
-                    // put business logic
+        System.out.println("Attempting login for user " + username + "....");
 
-                    String username = (String) externalTask.getVariable("username");
-                    String enteredPassword = (String) externalTask.getVariable("password");
-
-                    System.out.println("Attempting login for user " + username + "....");
-
-                    String correctPassword = userData.get(username);
-                    if(correctPassword != null) {
-                        if(correctPassword.equals(enteredPassword)) correct = true;
-                    }
-                    System.out.println("Login info correct: " + correct);
-                });
+        String correctPassword = userData.get(username);
+        if(correctPassword != null) {
+            if(correctPassword.equals(enteredPassword)) correct = true;
+        }
+        System.out.println("Login info correct: " + correct);
+        delegateExecution.setVariable("correct", correct);
     }
 
     public static void main(String[] args) throws Exception {
+        /*  System.out.println("Executing...");
+         ExternalTaskClient client = ExternalTaskClient.create()
+         .baseUrl("http://localhost:8080")
+         .asyncResponseTimeout(1000)
+         .build();
+
+         client.subscribe("check-login")
+         .lockDuration(1000)
+         .handler((externalTask, externalTaskService) -> {
+         boolean correct = false;
+         // put business logic
+
+         String username = (String) externalTask.getVariable("username");
+         String enteredPassword = (String) externalTask.getVariable("password");
+
+         System.out.println("Attempting login for user " + username + "....");
+
+         String correctPassword = userData.get(username);
+         if(correctPassword != null) {
+         if(correctPassword.equals(enteredPassword)) correct = true;
+         }
+         System.out.println("Login info correct: " + correct);
+         });
+         */
         new LoginWorker().execute(null);
     }
 }
