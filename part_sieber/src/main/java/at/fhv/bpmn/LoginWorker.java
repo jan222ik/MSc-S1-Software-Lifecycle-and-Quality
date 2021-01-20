@@ -17,7 +17,7 @@ public class LoginWorker implements JavaDelegate {
     }};
 
     @Override
-    public void execute(DelegateExecution delegateExecution) throws Exception {
+    public void execute(DelegateExecution delegateExecution) {
         boolean correct = false;
         System.out.println("Executing...");
         String username = (String) delegateExecution.getVariable("username");
