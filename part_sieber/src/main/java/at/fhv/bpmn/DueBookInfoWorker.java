@@ -12,9 +12,8 @@ public class DueBookInfoWorker implements JavaDelegate {
 
     @Override
     public void execute(final DelegateExecution delegateExecution) {
-        System.out.println("Executing...");
-        final Integer dueprocess = (Integer) delegateExecution.getVariable("dueprocess");
-        LOGGER.info("PROCNUM " + dueprocess);
+        LOGGER.info("Executing due book info worker...");
+        final Integer dueprocess = (Integer) delegateExecution.getVariable("overdueresult");
         boolean allowed = checkOverdueTime(dueprocess);
         delegateExecution.setVariable("allowed", allowed);
         LOGGER.info("User can proceed: " + allowed);

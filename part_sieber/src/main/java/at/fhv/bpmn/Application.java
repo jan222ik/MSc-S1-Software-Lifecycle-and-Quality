@@ -31,6 +31,7 @@ public class Application {
             processEngine.getRepositoryService()
                     .createDeployment()
                     .addInputStream("src/main/resources/libraryV2.bpmn", classLoader.getResourceAsStream("src/main/resources/libraryV2.bpmn"))
+                    .addInputStream("src/main/resources/decisionovertime.dmn", classLoader.getResourceAsStream("src/main/resources/decisionovertime.dmn"))
                     .deploy();
         }
     }

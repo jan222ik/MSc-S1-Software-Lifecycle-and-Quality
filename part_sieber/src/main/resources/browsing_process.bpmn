@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1vsg5el" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.4.0">
+  <bpmn:process id="browse_process" name="Browsing process" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1" name="start browsing">
+      <bpmn:outgoing>Flow_0hz4q5c</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="Activity_0j920n2" name="Book selection">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="book_name" label="Book name" type="string" />
+          <camunda:formField id="book_amount" label="Amount" type="long" />
+          <camunda:formField id="reason_selection" label="Reason for error" type="string" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_10o3gf9</bpmn:incoming>
+      <bpmn:incoming>Flow_0wqrfnu</bpmn:incoming>
+      <bpmn:incoming>Flow_0hz4q5c</bpmn:incoming>
+      <bpmn:outgoing>Flow_06m4lsv</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="Activity_1fgzryu" name="Check availability" camunda:class="at.fhv.bpmn.BookAvailabilityWorker">
+      <bpmn:incoming>Flow_06m4lsv</bpmn:incoming>
+      <bpmn:outgoing>Flow_09k50wm</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="Gateway_1rygn37">
+      <bpmn:incoming>Flow_1ars50v</bpmn:incoming>
+      <bpmn:outgoing>Flow_10o3gf9</bpmn:outgoing>
+      <bpmn:outgoing>Flow_16xs0sa</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="Activity_1q037rh" name="Done browsing?">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="selection_done" label="Done selecting books?" type="boolean" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_164ohj6</bpmn:incoming>
+      <bpmn:outgoing>Flow_1ars50v</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_0jslt3h">
+      <bpmn:incoming>Flow_09k50wm</bpmn:incoming>
+      <bpmn:outgoing>Flow_0wqrfnu</bpmn:outgoing>
+      <bpmn:outgoing>Flow_164ohj6</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_10o3gf9" name="continue browsing" sourceRef="Gateway_1rygn37" targetRef="Activity_0j920n2">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${not selection_done}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0wqrfnu" name="not enough" sourceRef="Gateway_0jslt3h" targetRef="Activity_0j920n2">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${not enough_books}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_06m4lsv" sourceRef="Activity_0j920n2" targetRef="Activity_1fgzryu" />
+    <bpmn:sequenceFlow id="Flow_09k50wm" sourceRef="Activity_1fgzryu" targetRef="Gateway_0jslt3h" />
+    <bpmn:sequenceFlow id="Flow_1ars50v" sourceRef="Activity_1q037rh" targetRef="Gateway_1rygn37" />
+    <bpmn:sequenceFlow id="Flow_164ohj6" name="enough" sourceRef="Gateway_0jslt3h" targetRef="Activity_1q037rh">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${enough_books}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0hz4q5c" sourceRef="StartEvent_1" targetRef="Activity_0j920n2" />
+    <bpmn:endEvent id="Event_0zr9vk5">
+      <bpmn:incoming>Flow_16xs0sa</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_16xs0sa" name="done browsing" sourceRef="Gateway_1rygn37" targetRef="Event_0zr9vk5">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${selection_done}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="browse_process">
+      <bpmndi:BPMNEdge id="Flow_10o3gf9_di" bpmnElement="Flow_10o3gf9">
+        <di:waypoint x="1120" y="175" />
+        <di:waypoint x="1120" y="355" />
+        <di:waypoint x="360" y="355" />
+        <di:waypoint x="360" y="190" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="696" y="337" width="89" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0wqrfnu_di" bpmnElement="Flow_0wqrfnu">
+        <di:waypoint x="770" y="175" />
+        <di:waypoint x="770" y="265" />
+        <di:waypoint x="360" y="265" />
+        <di:waypoint x="360" y="190" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="537" y="247" width="56" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_06m4lsv_di" bpmnElement="Flow_06m4lsv">
+        <di:waypoint x="410" y="150" />
+        <di:waypoint x="540" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_09k50wm_di" bpmnElement="Flow_09k50wm">
+        <di:waypoint x="640" y="150" />
+        <di:waypoint x="745" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ars50v_di" bpmnElement="Flow_1ars50v">
+        <di:waypoint x="970" y="150" />
+        <di:waypoint x="1095" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_164ohj6_di" bpmnElement="Flow_164ohj6">
+        <di:waypoint x="795" y="150" />
+        <di:waypoint x="870" y="150" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="814" y="132" width="37" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0hz4q5c_di" bpmnElement="Flow_0hz4q5c">
+        <di:waypoint x="188" y="150" />
+        <di:waypoint x="310" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_16xs0sa_di" bpmnElement="Flow_16xs0sa">
+        <di:waypoint x="1145" y="150" />
+        <di:waypoint x="1362" y="150" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1218" y="132" width="72" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Activity_0j920n2_di" bpmnElement="Activity_0j920n2">
+        <dc:Bounds x="310" y="110" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1fgzryu_di" bpmnElement="Activity_1fgzryu">
+        <dc:Bounds x="540" y="110" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1rygn37_di" bpmnElement="Gateway_1rygn37" isMarkerVisible="true">
+        <dc:Bounds x="1095" y="125" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1q037rh_di" bpmnElement="Activity_1q037rh">
+        <dc:Bounds x="870" y="110" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0jslt3h_di" bpmnElement="Gateway_0jslt3h" isMarkerVisible="true">
+        <dc:Bounds x="745" y="125" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="152" y="122" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="136" y="165" width="69" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0zr9vk5_di" bpmnElement="Event_0zr9vk5">
+        <dc:Bounds x="1362" y="132" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

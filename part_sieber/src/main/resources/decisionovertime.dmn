@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:biodi="http://bpmn.io/schema/dmn/biodi/2.0" id="Definitions_18qcsc0" name="DRD" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="4.4.0">
   <decision id="overdue_info" name="Overdue books">
-    <decisionTable id="DecisionTable_0u8ly8b">
-      <input id="Input_1" biodi:width="192">
-        <inputExpression id="InputExpression_1" typeRef="integer">
+    <decisionTable id="DecisionTable_0u8ly8b" hitPolicy="FIRST">
+      <input id="Input_1" label="TotalOvertime" biodi:width="192">
+        <inputExpression id="InputExpression_1" typeRef="integer" expressionLanguage="feel">
           <text>totalovertime</text>
         </inputExpression>
       </input>
-      <output id="Output_1" name="overdueresult" typeRef="integer" />
+      <output id="Output_1" label="OverdueRes" name="overdueresult" typeRef="integer" />
       <rule id="DecisionRule_19jlgrp">
         <inputEntry id="UnaryTests_1c0d4nv">
           <text>&lt;=14</text>
@@ -37,7 +37,7 @@
   <dmndi:DMNDI>
     <dmndi:DMNDiagram>
       <dmndi:DMNShape dmnElementRef="overdue_info">
-        <dc:Bounds height="80" width="180" x="160" y="100" />
+        <dc:Bounds height="80" width="180" x="270" y="100" />
       </dmndi:DMNShape>
     </dmndi:DMNDiagram>
   </dmndi:DMNDI>

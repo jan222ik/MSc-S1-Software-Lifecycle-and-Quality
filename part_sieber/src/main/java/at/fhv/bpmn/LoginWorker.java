@@ -25,15 +25,13 @@ public class LoginWorker implements JavaDelegate {
 
     @Override
     public void execute(final DelegateExecution delegateExecution) {
-        System.out.println("Executing...");
+        LOGGER.info("Executing login worker...");
         final String username = (String) delegateExecution.getVariable("username");
         final String enteredPassword = (String) delegateExecution.getVariable("password");
-        final Integer overdueTime = (Integer) dueBookTime.get("username");
-
-        System.out.println("Attempting login for user " + username + "....");
+        final Integer overdueTime = (Integer) dueBookTime.get(username);
+        LOGGER.info("Attempting login for user " + username + "....");
         final boolean correct = checkPassword(username, enteredPassword);
-
-        System.out.println("Login info correct: " + correct);
+        LOGGER.info("Login info correct: " + correct);
         delegateExecution.setVariable("correct", correct);
         delegateExecution.setVariable("totalovertime", overdueTime);
 
