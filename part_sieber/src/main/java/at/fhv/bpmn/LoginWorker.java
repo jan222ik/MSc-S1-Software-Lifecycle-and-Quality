@@ -16,18 +16,27 @@ public class LoginWorker implements JavaDelegate {
         put("mat", "1234");
         put("jan", "22ik");
     }};
+    private final static HashMap<String, Integer> dueBookTime = new HashMap<String, Integer>() {{
+        put("admin", 3);
+        put("test", 15);
+        put("mat", 0);
+        put("jan", 100);
+    }};
 
     @Override
     public void execute(final DelegateExecution delegateExecution) {
         System.out.println("Executing...");
         final String username = (String) delegateExecution.getVariable("username");
         final String enteredPassword = (String) delegateExecution.getVariable("password");
+        final Integer overdueTime = (Integer) dueBookTime.get("username");
 
         System.out.println("Attempting login for user " + username + "....");
         final boolean correct = checkPassword(username, enteredPassword);
 
         System.out.println("Login info correct: " + correct);
         delegateExecution.setVariable("correct", correct);
+        delegateExecution.setVariable("totalovertime", overdueTime);
+
     }
 
     @SuppressWarnings("WeakerAccess")
