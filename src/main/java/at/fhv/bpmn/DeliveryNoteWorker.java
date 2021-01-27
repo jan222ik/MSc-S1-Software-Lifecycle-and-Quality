@@ -1,6 +1,7 @@
 package at.fhv.bpmn;
 
 
+import org.assertj.core.util.VisibleForTesting;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 
@@ -22,12 +23,18 @@ public class DeliveryNoteWorker implements JavaDelegate {
         final String username = (String) delegateExecution.getVariable("username");
         final String realName = userNames.get(username);
         final HashMap<String, Long> chosenBooks = (HashMap<String, Long>) delegateExecution.getVariable("user_books");
+        final Double cost = (Double) delegateExecution.getVariable("delivery_cost");
+        final String deliveryNote = buildDeliveryNote(chosenBooks, realName, cost);
+        delegateExecution.setVariable("del_note", deliveryNote);
+        LOGGER.info(deliveryNote);
+    }
+
+    @VisibleForTesting
+    protected String buildDeliveryNote(HashMap<String, Long> chosenBooks, String realName, double cost) {
         final StringBuilder builder = new StringBuilder("\nYour order ").append(realName).append(": \n");
         chosenBooks.forEach((k, v) -> builder.append("\tBookname: ").append(k).append(", amount: ").append(v).append("\n"));
-        final Double cost = (Double) delegateExecution.getVariable("delivery_cost");
         builder.append("Cost for delivery: ").append(cost);
-        delegateExecution.setVariable("del_note", builder.toString());
-        LOGGER.info(builder.toString());
+        return builder.toString();
     }
 
 }
