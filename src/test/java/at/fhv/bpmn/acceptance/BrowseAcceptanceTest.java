@@ -1,22 +1,17 @@
 package at.fhv.bpmn.acceptance;
 
-import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*;
-
-import org.camunda.bpm.engine.TaskService;
-import org.camunda.bpm.engine.runtime.ActivityInstance;
-import org.camunda.bpm.engine.task.Task;
+import org.camunda.bpm.engine.ProcessEngine;
+import org.camunda.bpm.engine.RuntimeService;
+import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.test.Deployment;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.camunda.bpm.engine.runtime.ProcessInstance;
-import org.camunda.bpm.engine.RuntimeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.camunda.bpm.engine.ProcessEngine;
-import org.camunda.bpm.engine.variable.value.FileValue;
-import org.camunda.bpm.engine.variable.Variables;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.List;
+import java.util.Map;
+
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*;
 
 
 @SuppressWarnings("WeakerAccess")
@@ -48,7 +43,7 @@ public class BrowseAcceptanceTest {
      */
     @Test
     @Deployment
-    public void libProcessUntilBrowsing(){
+    public void libProcessUntilBrowsing() {
         ProcessInstance process = this.runtimeService.startProcessInstanceByKey("process_lib");
         assertThat(process)
                 .isNotNull()
@@ -69,30 +64,80 @@ public class BrowseAcceptanceTest {
                 .hasPassed("Gateway_May_Lend_More_Books")
                 .hasNotPassed("Activity_Subprocess_Browse_Books");
 
-        ActivityInstance activityInstance = runtimeService.getActivityInstance(process.getProcessInstanceId());
-        for (ActivityInstance childActivityInstance : activityInstance.getChildActivityInstances()) {
-            System.out.println("childActivityInstance = " + childActivityInstance);
-        }
+    }
 
-        ProcessInstance pi = process;
-        TaskService taskService = processEngine.getTaskService();
-        List<Task> subProcessTasks = taskService.createTaskQuery().processInstanceId(pi.getId()).orderByTaskName().asc().list();
-        subProcessTasks.forEach((task) -> {
-            System.out.println("task = " + task);
-        });
+
+    @Test
+    @Deployment
+    public void fullRun() {
+        ProcessInstance process = this.runtimeService.startProcessInstanceByKey("process_lib");
+        assertThat(process)
+                .isNotNull()
+                .isStarted();
+        // Login
+        complete(task(process),
+                withVariables(
+                        "username", "admin",
+                        "password", "admin"
+                )
+        );
+        assertThat(process)
+                .hasPassed("Activity_Check_Login_Data")
+                .hasPassed("Gateway_Correct_Password")
+                .hasPassed("Activity_Check_For_Due_Books")
+                .hasVariables("overdueresult")
+                .hasPassed("Activity_Due_Info")
+                .hasPassed("Gateway_May_Lend_More_Books")
+                .hasNotPassed("Activity_Subprocess_Browse_Books");
+
+        // Run SubProcess
+        ProcessInstance subProcess = processEngine
+                .getRuntimeService()
+                .createProcessInstanceQuery()
+                .superProcessInstanceId(process.getId())
+                .singleResult();
+
+        Map<String, Object> variables = withVariables(
+                "book_name", "Harry Potter",
+                "book_amount", 13L
+        );
+        complete(task(subProcess), variables);
+
+        assertThat(subProcess)
+                .hasPassed("Activity_Check_Status")
+                .hasPassed("Gateway_hasEnough");
+
+        complete(task(subProcess), withVariables("selection_done", true));
+
+        assertThat(subProcess)
+                .hasPassed("Event_Browsing_End")
+                .isEnded();
+
+        // Check End
+        assertThat(process)
+                .hasVariables("user_books")
+                .hasPassed("Activity_Amount_Calculation")
+                .isEnded();
     }
 
     @Test
-    public void  browseProcess() {
+    public void browseProcess() {
         ProcessInstance process = this.runtimeService.startProcessInstanceByKey("browse_process");
+        Map<String, Object> variables = withVariables(
+                "book_name", "Harry Potter",
+                "book_amount", 13L
+        );
+        complete(task(process), variables);
+
         assertThat(process)
-                .isNotNull()
-                .isStarted()
-                .hasPassed("Activity_Book_Selection");
+                .hasPassed("Activity_Check_Status")
+                .hasPassed("Gateway_hasEnough");
 
-    }
+        complete(task(process), withVariables("selection_done", true));
 
-    private void addBook(String name, String a) {
+        assertThat(process)
+                .hasPassed("Event_Browsing_End")
+                .isEnded();
 
     }
 
