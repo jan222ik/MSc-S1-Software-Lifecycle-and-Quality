@@ -90,9 +90,9 @@ public class LoginProcessStepDefs {
                 )
         );
         if (expected) {
-            assertThat(this.instance).hasPassed("Event_07t6c2k");
+            assertThat(this.instance).hasPassed("Activity_Check_For_Due_Books");
         } else {
-            assertThat(this.instance).hasNotPassed("Event_07t6c2k");
+            assertThat(this.instance).hasNotPassed("Activity_Check_For_Due_Books");
         }
     }
 }
