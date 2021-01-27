@@ -5,6 +5,7 @@ import org.assertj.core.util.VisibleForTesting;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 
+import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 public class DueBookInfoWorker implements JavaDelegate {
@@ -14,28 +15,31 @@ public class DueBookInfoWorker implements JavaDelegate {
     public void execute(final DelegateExecution delegateExecution) {
         LOGGER.info("Executing due book info worker...");
         final Integer dueprocess = (Integer) delegateExecution.getVariable("overdueresult");
-        boolean allowed = checkOverdueTime(dueprocess);
-        delegateExecution.setVariable("allowed", allowed);
-        LOGGER.info("User can proceed: " + allowed);
+        try {
+            boolean allowed = checkOverdueTime(dueprocess, LOGGER::info);
+            delegateExecution.setVariable("allowed", allowed);
+            LOGGER.info("User can proceed: " + allowed);
+        } catch (RuntimeException ex) {
+            LOGGER.warning(ex.getMessage());
+        }
     }
 
     @VisibleForTesting
-    protected boolean checkOverdueTime(final Integer overdueTime) {
+    protected boolean checkOverdueTime(final Integer overdueTime, Consumer<String> logStatement) {
         boolean allowed = true;
         switch (overdueTime) {
             case 1:
-                LOGGER.info("Enjoy your visit!");
+                logStatement.accept("Enjoy your visit!");
                 break;
             case 2:
-                LOGGER.info("You have between 15 and 30 days of overdue books. Please return them.");
+                logStatement.accept("You have between 15 and 30 days of overdue books. Please return them.");
                 break;
             case 3:
-                LOGGER.info("You have more than 30 days of overdue books. Before you return your overdue books, you cannot use the library.");
+                logStatement.accept("You have more than 30 days of overdue books. Before you return your overdue books, you cannot use the library.");
                 allowed = false;
                 break;
             default:
-                LOGGER.warning("This shouldn't have happened, check your decision table.");
-
+                throw new RuntimeException("This shouldn't have happened, check your decision table.");
         }
         return allowed;
     }
