@@ -1,9 +1,5 @@
 Feature: Login
 
-  #Background:
-  #  Given I am on the task site
-  #  And I have the task assigned
-
   Background:
     Given A Task for Login Exists
 
