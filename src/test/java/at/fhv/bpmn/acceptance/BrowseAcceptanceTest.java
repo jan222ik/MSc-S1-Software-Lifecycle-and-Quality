@@ -121,6 +121,7 @@ public class BrowseAcceptanceTest {
     }
 
     @Test
+    @Deployment
     public void browseProcess() {
         ProcessInstance process = this.runtimeService.startProcessInstanceByKey("browse_process");
         Map<String, Object> variables = withVariables(
