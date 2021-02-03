@@ -15,13 +15,13 @@ public class DeliveryCostWorker implements JavaDelegate {
     public void execute(final DelegateExecution delegateExecution) {
         LOGGER.info("Executing delivery cost worker...");
         delegateExecution.setVariable("reason_selection", "No error");
-        Integer amount = (Integer) delegateExecution.getVariable("total_amount");
+        final Integer amount = (Integer) delegateExecution.getVariable("total_amount");
         double cost = calculateCost(amount);
         delegateExecution.setVariable("delivery_cost", cost);
     }
 
     @VisibleForTesting
-    protected double calculateCost(Integer amount) {
+    double calculateCost(Integer amount) {
         double cost = 0.0;
         if(amount >= 5 && amount < 10 ) cost = 5.5;
         else if (amount >= 10 && amount < 20) cost = 9.9;
