@@ -38,9 +38,6 @@ public class BrowseAcceptanceTest {
     }
 
 
-    /**
-     * Run a process including the subprocess to make sure the intregration works
-     */
     @Test
     @Deployment
     public void libProcessUntilBrowsing() {
